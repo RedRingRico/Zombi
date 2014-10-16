@@ -1,0 +1,13 @@
+|                                                               PROJECT ZOMBI |
+|                                                                      README |
+
+| OVERVIEW                                                                    |
+Zombi is a survival horror game which takes place in a mansion.  The goal is to
+survive until help arrives.  Players have a limited amount of healing items and
+weapons at their disposal.  An introduction to how the player gets in the
+predicament they're in may make it into the game, for now the effort is
+concentrated on getting the player playing.
+
+Currently, the game is planned for Linux and Windows platforms, with Linux
+being the lead platform.  An OpenGL 3.3 or better graphics card is required.
+
