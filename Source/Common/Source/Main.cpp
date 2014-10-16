@@ -1,0 +1,19 @@
+#include <GitVersion.hpp>
+#include <iostream>
+
+int main( int p_Argc, char **p_ppArgv )
+{
+	std::cout << "Project Zombi" << std::endl;
+	std::cout << "-----------------" << std::endl;
+	std::cout << "Build Information" << std::endl;
+	std::cout << "-----------------" << std::endl;
+	std::cout << "Commit hash:   " << GIT_COMMITHASH << std::endl;
+	std::cout << "Version:       " << GIT_BUILD_VERSION << std::endl;
+	std::cout << "Branch:        " << GIT_BRANCH << std::endl;
+	std::cout << "Tag:           " << GIT_TAG_NAME << std::endl;
+	std::cout << "Rolling count: " << GIT_ROLLINGCOUNT << std::endl;
+	std::cout << "Commit time:   " << GIT_COMMITTERDATE << std::endl;
+
+	return 0;
+}
+
