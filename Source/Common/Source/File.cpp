@@ -14,7 +14,7 @@ namespace Zombi
 	{
 	}
 
-	ZOM_MEMSIZE File::GetSize( ) const
+	ZOM_SINT64 File::GetSize( ) const
 	{
 		return m_Size;
 	}

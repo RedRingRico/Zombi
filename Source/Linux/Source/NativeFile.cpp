@@ -1,6 +1,7 @@
 #include <NativeFile.hpp>
-#include <cstdio>
 #include <iostream>
+#define _FILE_OFFSET_BITS 64
+#include <cstdio>
 
 namespace Zombi
 {
@@ -116,9 +117,7 @@ namespace Zombi
 			return ZOM_FAIL;
 		}
 
-		fseek( m_pFileData->pFile, 0, SEEK_END );
-		m_Size = ftell( m_pFileData->pFile );
-		rewind( m_pFileData->pFile );
+		this->RecalculateSize( );
 
 		m_FileDescriptor = fileno( m_pFileData->pFile );
 
@@ -168,24 +167,72 @@ namespace Zombi
 	}
 
 	ZOM_UINT32 NativeFile::Seek( const FILE_SEEK p_Start,
-		const ZOM_MEMSIZE p_Offset )
+		const ZOM_SINT64 p_Offset )
 	{
 		return ZOM_OK;
 	}
 
-	ZOM_MEMSIZE NativeFile::GetPosition( ) const
+	ZOM_SINT64 NativeFile::GetPosition( ) const
 	{
-		return 0;
+		if( m_Open )
+		{
+			off_t Offset = ftello( m_pFileData->pFile );
+			return Offset;
+		}
+
+		return -1;
 	}
 
 	ZOM_UINT32 NativeFile::Rewind( )
 	{
-		return ZOM_OK;
+		if( m_Open )
+		{
+			rewind( m_pFileData->pFile );
+
+			return ZOM_OK;
+		}
+
+		std::cout << "[Zombi::NativeFile::Rewind] <ERROR> File closed, cannot "
+			"rewind" << std::endl;
+
+		return ZOM_FAIL;
 	}
 
 	ZOM_UINT32 NativeFile::WriteByte( const ZOM_BYTE *p_pData,
 		const ZOM_MEMSIZE p_Count, ZOM_MEMSIZE *p_pWritten )
 	{
+		if( !m_Open )
+		{
+			std::cout << "[Zombi::NativeFile::WriteByte] <ERROR> "
+				"File not open, cannot write" << std::endl;
+
+			return ZOM_FAIL;
+		}
+
+		if( p_pWritten )
+		{
+			( *p_pWritten ) = fwrite( p_pData, sizeof( ZOM_BYTE ), p_Count,
+				m_pFileData->pFile );
+
+			if( p_Count != ( *p_pWritten ) )
+			{
+				std::cout << "[Zombi::NativeFile::WriteByte] <WARNING> "
+					"Number of primitives written to media does not match the"
+					"requested amount | Wrote: " << ( *p_pWritten ) <<
+					" bytes instead of " << p_Count << "bytes" << std::endl;
+
+				this->RecalculateSize( );
+
+				return ZOM_FAIL;
+			}
+		}
+		else
+		{
+			fwrite( p_pData, sizeof( ZOM_BYTE ), p_Count, m_pFileData->pFile );
+		}
+
+		this->RecalculateSize( );
+
 		return ZOM_OK;
 	}
 
@@ -193,6 +240,20 @@ namespace Zombi
 		const ZOM_MEMSIZE p_Count, ZOM_MEMSIZE *p_pRead )
 	{
 		return ZOM_OK;
+	}
+
+	void NativeFile::RecalculateSize( )
+	{
+		off_t CurrentOffset = ftello( m_pFileData->pFile );
+
+		fseeko( m_pFileData->pFile, 0, SEEK_END );
+
+		m_Size = ftello( m_pFileData->pFile );
+
+		if( m_Size != CurrentOffset )
+		{
+			fseeko( m_pFileData->pFile, -CurrentOffset, SEEK_END );
+		}
 	}
 }
 

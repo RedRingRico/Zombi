@@ -16,8 +16,8 @@ namespace Zombi
 		virtual ZOM_UINT32 Close( );
 
 		virtual ZOM_UINT32 Seek( const FILE_SEEK p_Start,
-			const ZOM_MEMSIZE p_Offset );
-		virtual ZOM_MEMSIZE GetPosition( ) const;
+			const ZOM_SINT64 p_Offset );
+		virtual ZOM_SINT64 GetPosition( ) const;
 		virtual ZOM_UINT32 Rewind( );
 
 		virtual ZOM_UINT32 WriteByte( const ZOM_BYTE *p_pData,
@@ -30,6 +30,8 @@ namespace Zombi
 		struct FileData;
 
 		FileData	*m_pFileData;
+
+		void RecalculateSize( );
 	};
 }
 

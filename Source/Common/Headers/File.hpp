@@ -31,8 +31,8 @@ namespace Zombi
 		virtual ZOM_UINT32 Close( ) = 0;
 
 		virtual ZOM_UINT32 Seek( const FILE_SEEK p_Start,
-			const ZOM_MEMSIZE p_Offset ) = 0;
-		virtual ZOM_MEMSIZE GetPosition( ) const = 0;
+			const ZOM_SINT64 p_Offset ) = 0;
+		virtual ZOM_SINT64 GetPosition( ) const = 0;
 		virtual ZOM_UINT32 Rewind( ) = 0;
 
 		virtual ZOM_UINT32 WriteByte( const ZOM_BYTE *p_pData,
@@ -41,14 +41,14 @@ namespace Zombi
 		virtual ZOM_UINT32 ReadByte( ZOM_BYTE *p_pData,
 			const ZOM_MEMSIZE p_Count, ZOM_MEMSIZE *p_pRead ) = 0;
 
-		ZOM_MEMSIZE GetSize( ) const;
+		ZOM_SINT64 GetSize( ) const;
 		ZOM_BOOL IsOpen( ) const;
 		ZOM_FILE_DESCRIPTOR	GetFileDescriptor( ) const;
 		ZOM_UINT32 GetFileAccess( ) const;
 
 	protected:
 		ZOM_BOOL			m_Open;
-		ZOM_MEMSIZE			m_Size;
+		ZOM_SINT64			m_Size;
 		ZOM_FILE_DESCRIPTOR	m_FileDescriptor;
 		ZOM_UINT32			m_FileAccess;
 	};
