@@ -1,4 +1,5 @@
 #include <Game.hpp>
+#include <iostream>
 
 namespace Zombi
 {
@@ -12,6 +13,14 @@ namespace Zombi
 
 	ZOM_UINT32 Game::Initialise( )
 	{
+		if( this->PlatformInitialise( ) != ZOM_OK )
+		{
+			std::cout << "[Zombi::Game::Initialise] <ERROR> Failed to perform "
+				"platform-specific initialisation" << std::endl;
+
+			return ZOM_FAIL;
+		}
+
 		return ZOM_OK;
 	}
 

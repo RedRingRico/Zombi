@@ -15,6 +15,7 @@ namespace Zombi
 		ZOM_UINT32 Execute( );
 
 	private:
+		ZOM_UINT32 PlatformInitialise( );
 	};
 }
 
