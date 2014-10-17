@@ -1,6 +1,6 @@
 #include <GitVersion.hpp>
 #include <Game.hpp>
-#include <NativeFile.hpp>
+#include <Log.hpp>
 #include <iostream>
 #include <cstring>
 
@@ -17,63 +17,11 @@ int main( int p_Argc, char **p_ppArgv )
 	std::cout << "Rolling count: " << GIT_ROLLINGCOUNT << std::endl;
 	std::cout << "Commit time:   " << GIT_COMMITTERDATE << std::endl;
 
-	std::cout << std::endl << "FILE TESTING" << std::endl;
+	std::cout << std::endl << "LOG TESTING" << std::endl;
 
-	Zombi::NativeFile FileTest;
+	Zombi::OpenLogFile( "ZombiTest.log" );
+	Zombi::CloseLogFile( );
 
-	if( FileTest.Open( "zombi.txt",
-		Zombi::FILE_ACCESS_MODE_WRITE | Zombi::FILE_ACCESS_MODE_UPDATE ) !=
-			ZOM_OK )
-	{
-		std::cout << "Failed to open file for writing" << std::endl;
-	}
-
-	ZOM_SINT64 FilePosition = FileTest.GetPosition( );
-
-	if( FilePosition == -1)
-	{
-		std::cout << "Could not get position (unexpected result)" << std::endl;
-	}
-	else
-	{
-		std::cout << "File position: " << FilePosition << std::endl;
-	}
-
-	std::string TestString( "Testing the file API\n\n" );
-
-	FileTest.WriteByte(
-		reinterpret_cast< const ZOM_BYTE * >( TestString.c_str( ) ),
-		TestString.size( ), ZOM_NULL );
-
-	ZOM_BYTE ReadBack[ FileTest.GetSize( ) + 1 ];
-	memset( ReadBack, '\0', TestString.size( ) + 1 );
-
-	FileTest.Rewind( );
-
-	FileTest.ReadByte( ReadBack,
-		FileTest.GetSize( ), ZOM_NULL );
-
-	std::cout << "Read back: " << std::endl << ReadBack << std::endl;
-
-	FilePosition = FileTest.GetPosition( );
-
-	if( FilePosition == -1)
-	{
-		std::cout << "Could not get position (unexpected result)" << std::endl;
-	}
-	else
-	{
-		std::cout << "File position: " << FilePosition << std::endl;
-	}
-
-	std::cout << "File size: " << FileTest.GetSize( ) << std::endl;
-
-	FileTest.Close( );
-
-	if( FileTest.GetPosition( ) == -1)
-	{
-		std::cout << "Could not get position (expected result)" << std::endl;
-	}
 
 	Zombi::Game TheGame;
 
