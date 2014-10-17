@@ -31,5 +31,7 @@ const ZOM_UINT32 ZOM_FAIL	= 0xFFFFFFFF;
 const ZOM_BOOL ZOM_TRUE = 1;
 const ZOM_BOOL ZOM_FALSE = 0;
 
+#define ZOM_NULL nullptr
+
 #endif // __ZOMBI_DATATYPES_HPP__
 
