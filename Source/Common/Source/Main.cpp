@@ -1,4 +1,5 @@
 #include <GitVersion.hpp>
+#include <Game.hpp>
 #include <iostream>
 
 int main( int p_Argc, char **p_ppArgv )
@@ -14,6 +15,16 @@ int main( int p_Argc, char **p_ppArgv )
 	std::cout << "Rolling count: " << GIT_ROLLINGCOUNT << std::endl;
 	std::cout << "Commit time:   " << GIT_COMMITTERDATE << std::endl;
 
-	return 0;
+	Zombi::Game TheGame;
+
+	if( TheGame.Initialise( ) != ZOM_OK )
+	{
+		std::cout << "[main] <ERROR> Something went wrong initialising the "
+			"Game object" << std::endl;
+
+		return ZOM_FAIL;
+	}
+
+	return TheGame.Execute( );
 }
 
