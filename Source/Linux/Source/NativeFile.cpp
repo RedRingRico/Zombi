@@ -148,6 +148,7 @@ namespace Zombi
 		}
 
 		m_Open = ZOM_TRUE;
+		m_FileAccess = p_Access;
 
 		return ZOM_OK;
 	}
@@ -298,7 +299,7 @@ namespace Zombi
 				std::cout << "[Zombi::NativeFile::WriteByte] <WARNING> "
 					"Number of primitives written to media does not match the"
 					"requested amount | Wrote: " << ( *p_pWritten ) <<
-					" bytes instead of " << p_Count << "bytes" << std::endl;
+					" bytes instead of " << p_Count << " bytes" << std::endl;
 
 				this->RecalculateSize( );
 
@@ -318,6 +319,34 @@ namespace Zombi
 	ZOM_UINT32 NativeFile::ReadByte( ZOM_BYTE *p_pData,
 		const ZOM_MEMSIZE p_Count, ZOM_MEMSIZE *p_pRead )
 	{
+		if( !m_Open )
+		{
+			std::cout << "[Zombi::NativeFile::ReadByte] <ERROR> "
+				"File not open, cannot read" << std::endl;
+
+			return ZOM_FAIL;
+		}
+
+		if( p_pRead )
+		{
+			( *p_pRead ) = fread( p_pData, sizeof( ZOM_BYTE ), p_Count,
+				m_pFileData->pFile );
+
+			if( p_Count != ( *p_pRead ) )
+			{
+				std::cout << "[Zombi::NativeFile::ReadByte] <WARNING> "
+					"Number of primitives read from media does not match the "
+					"expected amount | Read "<< ( *p_pRead ) << " bytes "
+					"intead of " << p_Count << " bytes" << std::endl;
+
+				return ZOM_FAIL;
+			}
+		}
+		else
+		{
+			fread( p_pData, sizeof( ZOM_BYTE ), p_Count, m_pFileData->pFile );
+		}
+
 		return ZOM_OK;
 	}
 

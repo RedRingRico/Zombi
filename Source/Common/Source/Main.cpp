@@ -2,6 +2,7 @@
 #include <Game.hpp>
 #include <NativeFile.hpp>
 #include <iostream>
+#include <cstring>
 
 int main( int p_Argc, char **p_ppArgv )
 {
@@ -20,7 +21,9 @@ int main( int p_Argc, char **p_ppArgv )
 
 	Zombi::NativeFile FileTest;
 
-	if( FileTest.Open( "zombi.txt", Zombi::FILE_ACCESS_MODE_WRITE ) != ZOM_OK )
+	if( FileTest.Open( "zombi.txt",
+		Zombi::FILE_ACCESS_MODE_WRITE | Zombi::FILE_ACCESS_MODE_UPDATE ) !=
+			ZOM_OK )
 	{
 		std::cout << "Failed to open file for writing" << std::endl;
 	}
@@ -41,6 +44,16 @@ int main( int p_Argc, char **p_ppArgv )
 	FileTest.WriteByte(
 		reinterpret_cast< const ZOM_BYTE * >( TestString.c_str( ) ),
 		TestString.size( ), ZOM_NULL );
+
+	ZOM_BYTE ReadBack[ FileTest.GetSize( ) + 1 ];
+	memset( ReadBack, '\0', TestString.size( ) + 1 );
+
+	FileTest.Rewind( );
+
+	FileTest.ReadByte( ReadBack,
+		FileTest.GetSize( ), ZOM_NULL );
+
+	std::cout << "Read back: " << std::endl << ReadBack << std::endl;
 
 	FilePosition = FileTest.GetPosition( );
 
