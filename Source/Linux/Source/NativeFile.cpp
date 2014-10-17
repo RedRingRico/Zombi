@@ -169,6 +169,85 @@ namespace Zombi
 	ZOM_UINT32 NativeFile::Seek( const FILE_SEEK p_Start,
 		const ZOM_SINT64 p_Offset )
 	{
+		int ErrNo = 0;
+
+		switch( p_Start )
+		{
+			case FILE_SEEK_SET:
+			{
+				if( fseeko( m_pFileData->pFile, p_Offset, SEEK_SET ) == -1 )
+				{
+					std::cout << "[Zombi::NativeFile::Seek] <ERROR> Failed to "
+						"seek from the start of the file to " << p_Offset <<
+						std::endl;
+
+					ErrNo = errno;
+				}
+				break;
+			}
+			case FILE_SEEK_CURRENT:
+			{
+				if( fseeko( m_pFileData->pFile, p_Offset, SEEK_CUR ) == -1 )
+				{
+					std::cout << "[Zombi::NativeFile::Seek] <ERROR> Failed to "
+						"seek from the current position to " << p_Offset <<
+						std::endl;
+
+					ErrNo = errno;
+				}
+				break;
+			}
+			case FILE_SEEK_END:
+			{
+				if( fseeko( m_pFileData->pFile, p_Offset, SEEK_END ) == -1 )
+				{
+					std::cout << "[Zombi::NativeFile::Seek] <ERROR> Failed to "
+						"seek from the end of the file to " << p_Offset <<
+						std::endl;
+
+					ErrNo = errno;
+				}
+				break;
+			}
+			default:
+			{
+				std::cout << "[Zombi::NativeFile::Seek] <ERROR> Unknown "
+					"starting position" << std::endl;
+
+				return ZOM_FAIL;
+			}
+		}
+
+		if( ErrNo )
+		{
+			switch( ErrNo )
+			{
+				case EBADF:
+				{
+					std::cout << "\tThe stream is not a seekable stream" <<
+						std::endl;
+
+					break;
+				}
+				case EINVAL:
+				{
+					std::cout << "\tThe whence argument passed to fseek was "
+						"not valid" << std::endl;
+
+					break;
+				}
+				default:
+				{
+					std::cout << "\tUnknown reason for file seek failure" <<
+						std::endl;
+
+					break;
+				}
+			}
+
+			return ZOM_FAIL;
+		}
+
 		return ZOM_OK;
 	}
 
